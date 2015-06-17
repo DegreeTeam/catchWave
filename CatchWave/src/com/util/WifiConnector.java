@@ -62,9 +62,6 @@ public class WifiConnector {
 		wfc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP);
 		wfc.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
 		
-		
-		
-		
 		List<WifiConfiguration> configList = wManager.getConfiguredNetworks();
 		boolean flag = true;
 		if(configList != null){
@@ -83,7 +80,10 @@ public class WifiConnector {
 		
 		if (networkId != -1) {
 			wManager.enableNetwork(networkId, true);
+			return true;
 		}
-		return true;
+		else{
+			return false;
+		}
 	}
 }

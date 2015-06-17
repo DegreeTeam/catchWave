@@ -2,6 +2,7 @@ package com.catchwave.adapter;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
@@ -71,14 +72,13 @@ public class BleListAdapter extends BaseAdapter {
 		        
 		        WifiConnector connector = new WifiConnector(maincon);
 		        connector.isConnect();
-		        connector.connectWifi(arSrc.get(position).getSsid(), arSrc.get(position).getPw());
+		        if(connector.connectWifi(arSrc.get(position).getSsid(), arSrc.get(position).getPw())){
+			        Intent intent = new Intent( maincon, PlayerActivity.class);
+			        maincon.startActivity(intent);
+		        }
 			}
         });
 		
-		Intent intent = new Intent(BleListActivity.class,
-				PlayerActivity.class);
-		startActivity(intent);
-		finish();
 		return convertView;
 	}
 
