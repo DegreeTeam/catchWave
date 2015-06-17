@@ -1,15 +1,20 @@
 package com.catchwave.service;
 
-import java.net.Socket;
-
-import com.util.TcpGetter;
-
+import android.annotation.SuppressLint;
+import android.app.PendingIntent;
+import android.app.PendingIntent.CanceledException;
 import android.app.Service;
 import android.content.Intent;
 import android.media.AudioFormat;
 import android.media.AudioManager;
 import android.media.AudioTrack;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Message;
+
+import com.catchwave.view.BleListActivity;
+import com.catchwave.view.PlayerActivity;
+import com.util.TcpGetter;
 
 public class PlayService extends Service {
 	final int SAMPLE_RATE = 22400;
@@ -32,12 +37,12 @@ public class PlayService extends Service {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		audioTrack.play();
-		getter = new TcpGetter(audioTrack);
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
+		getter = new TcpGetter(audioTrack, mHandler);
 		getter.start();
 		return super.onStartCommand(intent, flags, startId);
 	}
@@ -48,5 +53,18 @@ public class PlayService extends Service {
 		getter.setThread_flag(false);
 		super.onDestroy();
 	}
+	
+	@SuppressLint("HandlerLeak")
+	public Handler mHandler = new Handler() {
+		@Override
+		@SuppressWarnings("unchecked")
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case 1:
+				stopSelf();
+				PlayerActivity.playerActivity.finish();
+			}
+		}
+ };
 
 }

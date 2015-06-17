@@ -29,17 +29,12 @@ public class WifiConnector {
 	public boolean isConnect(){
 		mobile = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 		wifi = connectivityManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-		if(mobile.isConnected()){
-			Log.d("test", "LTE에 연결");
-		} 
-		else if(wifi.isConnected()){
-			Log.d("test", "wifi에 연결");
-		}
 		
 		boolean is_enable = wManager.isWifiEnabled();
 		if (!is_enable) // WIFI on
 		{
 			wManager.setWifiEnabled(true);
+			return false;
 		}
 		return true;
 	}

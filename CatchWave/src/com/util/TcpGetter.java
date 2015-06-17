@@ -6,6 +6,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 import android.media.AudioTrack;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
 public class TcpGetter extends Thread {
@@ -14,22 +16,12 @@ public class TcpGetter extends Thread {
 	Socket sock;
 	private AudioTrack audioTrack;
 	private boolean thread_flag;
-	
-	@Override
-	public void destroy() {
-		// TODO Auto-generated method stub
-		super.destroy();
-		try {
-			sock.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	public TcpGetter(AudioTrack audioTrack) {
+	Handler mHandler;
+		
+	public TcpGetter(AudioTrack audioTrack, Handler mHandler) {
 		this.audioTrack = audioTrack;
 		thread_flag = true;
+		this.mHandler = mHandler;
 	}
 	
 	public void setThread_flag(boolean thread_flag) {
@@ -51,14 +43,24 @@ public class TcpGetter extends Thread {
 			
 			while(thread_flag){
 				input.read(datafile);
-				Log.d("tes", datafile.toString());
 				audioTrack.write(datafile, 0, datafile.length);
 			}
 			
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
+			try {
+				sock.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			Log.d("tes", "sock error");
+			
+			//예외 메시지
+			Message mess = mHandler.obtainMessage();
+			mess.what =1;
+			mHandler.sendMessage(mess);
 		}
 	}
 }

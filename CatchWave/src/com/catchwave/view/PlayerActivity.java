@@ -10,12 +10,14 @@ import android.widget.Button;
 
 public class PlayerActivity extends Activity {
 
+	public static Activity playerActivity;
 	Button playBtn;
 	Button stopBtn;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState); 
+		playerActivity = this;
 		setContentView(R.layout.activity_player);
 		
 		playBtn = (Button) findViewById(R.id.playBtn);
@@ -34,5 +36,11 @@ public class PlayerActivity extends Activity {
 			}
         });
 		
+	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		stopService(new Intent(getApplicationContext(),PlayService.class));
 	}
 }
