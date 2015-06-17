@@ -17,8 +17,7 @@ public class LogoActivity extends Activity {
         new Timer().schedule(new TimerTask() {          
 		    @Override
 		    public void run() {
-		    	Intent intent = new Intent(LogoActivity.this,
-						BleListActivity.class);
+		    	Intent intent = new Intent(LogoActivity.this, BleListActivity.class);
 				startActivity(intent);
 				finish();
 		    }

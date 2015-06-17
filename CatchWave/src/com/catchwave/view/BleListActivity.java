@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.catchwave.adapter.BleListAdapter;
 import com.catchwave.vo.BleVO;
 import com.util.BleScanner;
+import com.util.WifiConnector;
 
 public class BleListActivity extends Activity {
 	private BluetoothAdapter mBluetoothAdapter;
@@ -35,6 +36,8 @@ public class BleListActivity extends Activity {
 	        super.onCreate(savedInstanceState);
 	        setContentView(R.layout.activity_ble);
 	        
+	        
+	        //BLE 지원 안되는거 종료
 	        if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
 			    Toast.makeText(this, "ble not support", Toast.LENGTH_SHORT).show();
 			    //지원하지 않으면 서비스 종료
@@ -46,7 +49,7 @@ public class BleListActivity extends Activity {
 			mBluetoothAdapter = bluetoothManager.getAdapter();
 			
 	        	        
-			
+			//리스트뷰 세팅
 	        ble_arr = new ArrayList<BleVO>();
 	        BleVO test = new BleVO();
 	        test.setSsid("test");
@@ -55,8 +58,8 @@ public class BleListActivity extends Activity {
 	        
 	        ListView list = (ListView) findViewById(R.id.ble_listView);
 	        list.setAdapter(adapter);
-	        list.setOnItemClickListener(mItemClickListener);
 	        
+	        //BLE 스캔 기능
 	        scan = (Button) findViewById(R.id.scan);
 	        scan.setOnClickListener(new Button.OnClickListener() {
 				@Override
@@ -76,14 +79,6 @@ public class BleListActivity extends Activity {
 				}
 	        });
 	    }
-	 AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view, int position,
-					long l_position) {
-				Log.d("tt", "ssid = " + ble_arr.get(position).getSsid());
-			};
-	 };
 	 
 	 @SuppressLint("HandlerLeak")
 		public Handler mHandler = new Handler() {

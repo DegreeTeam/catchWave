@@ -13,9 +13,13 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.catchwave.view.BleListActivity;
+import com.catchwave.view.LogoActivity;
+import com.catchwave.view.PlayerActivity;
 import com.catchwave.view.R;
 import com.catchwave.vo.BleVO;
 import com.util.BleScanner;
+import com.util.WifiConnector;
 
 public class BleListAdapter extends BaseAdapter {
 	Context maincon;
@@ -64,8 +68,17 @@ public class BleListAdapter extends BaseAdapter {
 			public void onClick(View view) {
 				int position = (Integer) view.getTag();
 				Log.d("test", arSrc.get(position).getSsid());
+		        
+		        WifiConnector connector = new WifiConnector(maincon);
+		        connector.isConnect();
+		        connector.connectWifi(arSrc.get(position).getSsid(), arSrc.get(position).getPw());
 			}
         });
+		
+		Intent intent = new Intent(BleListActivity.class,
+				PlayerActivity.class);
+		startActivity(intent);
+		finish();
 		return convertView;
 	}
 
