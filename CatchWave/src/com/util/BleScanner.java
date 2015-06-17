@@ -1,36 +1,60 @@
 package com.util;
 
+import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
+
+import com.catchwave.view.BleListActivity;
+import com.catchwave.view.LogoActivity;
+import com.catchwave.vo.BleVO;
+
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 
-public class BleScanner{
+public class BleScanner extends Thread{
 
+	private ArrayList<BleVO> ble_list;
 	private BluetoothAdapter mBluetoothAdapter;
     private Handler mHandler;
     private Context context;
-    private static final long SCAN_PERIOD = 5000;
-
-    public BleScanner(BluetoothAdapter mBluetoothAdapter, Handler mHandler, Context context) {
+    private static final long SCAN_PERIOD = 3000;
+        
+    
+    @Override
+	public void destroy() {
+		// TODO Auto-generated method stub
+		super.destroy();
+	}
+	@Override
+	public void run() {
+		scanLeDevice(true);
+		 new Timer().schedule(new TimerTask() {          
+			    @Override
+			    public void run() {
+			    	Message mess = mHandler.obtainMessage();
+					mess.what =1;
+					mess.obj= ble_list;
+		
+					mHandler.sendMessage(mess);
+			    }
+			}, 3000);
+	}
+	public BleScanner(BluetoothAdapter mBluetoothAdapter, Handler mHandler) {
 		super();
 		this.mBluetoothAdapter = mBluetoothAdapter;
 		this.mHandler = mHandler;
-		this.context = context;
+		ble_list = new ArrayList<BleVO>();
 	}
     private BluetoothAdapter.LeScanCallback mLeScanCallback =
             new BluetoothAdapter.LeScanCallback() {
    
 		@Override
 		public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
-			// TODO Auto-generated method stub
-			Log.d("BLE", "device name = " + device.getName());
-			Log.d("BLE", "device address = " + device.getAddress());
-			Log.d("BLE", "device rssi = " + rssi);
-
-			
 			String ssid = new String();
 			String pw = new String(); 
 			Byte[] id = new Byte[4];
@@ -46,12 +70,26 @@ public class BleScanner{
 				Log.d("BLE", "pw = " + pw);
 				Log.d("BLE", "id = " + id);
 				
-				mBluetoothAdapter.stopLeScan(mLeScanCallback);
+				BleVO ble = new BleVO();
+				ble.setSsid(ssid);
+				ble.setPw(pw);
+				
+				boolean flag = true;
+				for(int i=0;i<ble_list.size();i++){
+					if(ble_list.get(i).getSsid().equals(ble.getSsid())){
+						flag = false;
+					}
+				}
+				if(flag){
+					ble_list.add(ble);
+				}
+				
 			}
 			
 		}
     };
     public void scanLeDevice(final boolean enable) {
+    	ble_list.clear();
         if (enable) {
             // Stops scanning after a pre-defined scan period.
             mHandler.postDelayed(new Runnable() {
