@@ -3,5 +3,6 @@
 
     <string name="app_name">CatchWave</string>
     <string name="hello_world">Hello world!</string>
+    <string name="Teamname"> Made By JHC </string>
 
 </resources>

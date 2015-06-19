@@ -17,13 +17,13 @@ public class TcpGetter extends Thread {
 	private AudioTrack audioTrack;
 	private boolean thread_flag;
 	Handler mHandler;
-		
+
 	public TcpGetter(AudioTrack audioTrack, Handler mHandler) {
 		this.audioTrack = audioTrack;
 		thread_flag = true;
 		this.mHandler = mHandler;
 	}
-	
+
 	public void setThread_flag(boolean thread_flag) {
 		this.thread_flag = thread_flag;
 	}
@@ -40,14 +40,13 @@ public class TcpGetter extends Thread {
 			sock = new Socket(serverAddr, PORT);
 			Log.d("tes", "after sock");
 			input = new DataInputStream(sock.getInputStream());
-			
-			while(thread_flag){
+
+			while (thread_flag) {
 				input.read(datafile);
 				audioTrack.write(datafile, 0, datafile.length);
 			}
-			
-		} 
-		catch (Exception e) {
+
+		} catch (Exception e) {
 			e.printStackTrace();
 			try {
 				sock.close();
@@ -56,10 +55,10 @@ public class TcpGetter extends Thread {
 				e1.printStackTrace();
 			}
 			Log.d("tes", "sock error");
-			
-			//예외 메시지
+
+			// 예외 메시지
 			Message mess = mHandler.obtainMessage();
-			mess.what =1;
+			mess.what = 1;
 			mHandler.sendMessage(mess);
 		}
 	}

@@ -4,17 +4,14 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import com.catchwave.view.BleListActivity;
-import com.catchwave.view.LogoActivity;
-import com.catchwave.vo.BleVO;
-
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+
+import com.catchwave.vo.BleVO;
 
 public class BleScanner extends Thread{
 
@@ -37,13 +34,14 @@ public class BleScanner extends Thread{
 			    @Override
 			    public void run() {
 			    	Message mess = mHandler.obtainMessage();
-					mess.what =1;
+					mess.what = 1;
 					mess.obj= ble_list;
 		
 					mHandler.sendMessage(mess);
 			    }
 			}, 3000);
 	}
+	
 	public BleScanner(BluetoothAdapter mBluetoothAdapter, Handler mHandler) {
 		super();
 		this.mBluetoothAdapter = mBluetoothAdapter;
