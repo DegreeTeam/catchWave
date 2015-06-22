@@ -1,12 +1,18 @@
 package com.catchwave.view;
 
+import com.catchwave.service.notService;
+
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 public class PopupActivity extends Activity {
@@ -14,6 +20,8 @@ public class PopupActivity extends Activity {
 
 	private TextView tv;
 	private String uuidData;
+	private ImageButton imgbtn;
+	int cur;
 
 	// PopupActivity Click Event
 	public void PopupClick(View v) {
@@ -38,6 +46,13 @@ public class PopupActivity extends Activity {
 		setContentView(R.layout.activity_pop);
 
 		tv = (TextView) findViewById(R.id.tv);
+		imgbtn = (ImageButton) findViewById(R.id.setbtn);
+		imgbtn.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View view) {
+				ScanDialogRadio();
+			}
+		});
+
 		getWindow().addFlags(
 				WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
 						| WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
@@ -45,6 +60,63 @@ public class PopupActivity extends Activity {
 
 		Intent intent = getIntent();
 		uuidData = intent.getExtras().getString("PUUID");
+	}
+
+	// Dialog
+	private void ScanDialogRadio() {
+		final CharSequence[] scanMode = { "수동", "자동" };
+		AlertDialog.Builder mode_d = new AlertDialog.Builder(this);
+		mode_d.setIcon(R.drawable.setting);
+		mode_d.setTitle("Select Mode");
+		mode_d.setSingleChoiceItems(scanMode, cur,
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int item) {
+						cur = item;
+					}
+				});
+		mode_d.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				// Action for 'YES' Button
+				// Stop Service
+				if (cur == 0) {
+					Log.i("TEST", "MODE 0 STOP Service");
+					BleListActivity.mode_cur = 0;
+					// BR
+					Intent intent = new Intent("com.catchwave.mode.signal");
+					intent.putExtra("MODE", false);
+					sendBroadcast(intent);
+					// Service
+					if (notService.IsNoticeService)
+						stopService(new Intent(PopupActivity.this,
+								notService.class));
+				}
+				// Start Service
+				if (cur == 1) {
+					Log.i("TEST", "MODE 1 START Service");
+					BleListActivity.mode_cur = 1;
+					// BR
+					Intent intent = new Intent("com.catchwave.mode.signal");
+					intent.putExtra("MODE", true);
+					sendBroadcast(intent);
+					// Service
+					if (!notService.IsNoticeService)
+						startService(new Intent(PopupActivity.this,
+								notService.class));
+				}
+			}
+		});
+		mode_d.setNegativeButton("Cancel",
+				new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// Action for 'NO' Button
+						dialog.cancel();
+					}
+				});
+
+		AlertDialog alert = mode_d.create();
+		alert.show();
 	}
 
 	// OnResume
@@ -57,6 +129,7 @@ public class PopupActivity extends Activity {
 		tv.setPaintFlags(tv.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
 		tv.setTextScaleX(2.0f);
 		tv.setText(name);
+		cur = BleListActivity.mode_cur;
 	}
 
 	// OnDestroy

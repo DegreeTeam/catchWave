@@ -24,6 +24,8 @@ import com.catchwave.vo.BleVO;
 
 public class notService extends Service {
 
+	public static boolean IsNoticeService = false;
+
 	private ArrayList<BleVO> ble_list;
 	private BluetoothAdapter mBluetoothAdapter;
 	private PowerManager pm;
@@ -174,6 +176,7 @@ public class notService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		IsNoticeService = true;
 		pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 		ble_list = new ArrayList<BleVO>();
 		bluetoothcheck();
@@ -191,6 +194,7 @@ public class notService extends Service {
 	@Override
 	public void onDestroy() {
 		running = false;
+		IsNoticeService = false;
 		mBluetoothAdapter.stopLeScan(mLeScanCallback);
 		super.onDestroy();
 	}

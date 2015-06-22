@@ -8,6 +8,7 @@
         android:minSdkVersion="19"
         android:targetSdkVersion="21" />
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
@@ -49,6 +50,17 @@
         <service
             android:name="com.catchwave.service.notService"
             android:enabled="true" />
+
+        <receiver
+            android:name="com.catchwave.br.BootBR"
+            android:enabled="true"
+            android:exported="false"
+            android:label="Broadcast Receiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.catchwave.mode.signal" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

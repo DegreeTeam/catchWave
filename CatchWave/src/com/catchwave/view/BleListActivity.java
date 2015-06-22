@@ -34,11 +34,12 @@ import com.catchwave.vo.BleVO;
 import com.util.BleScanner;
 
 public class BleListActivity extends Activity {
+
+	public static int mode_cur;
 	private BluetoothAdapter mBluetoothAdapter;
 	ArrayList<BleVO> ble_arr;
 	BleListAdapter adapter;
 	private FloatingActionButton mFloatingButton;
-	int mode_cur;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +125,7 @@ public class BleListActivity extends Activity {
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (item.getItemId() == (R.id.setting)) {
+
 			ScanDialogRadio();
 		}
 		return super.onOptionsItemSelected(item);
@@ -147,14 +149,26 @@ public class BleListActivity extends Activity {
 				// Stop Service
 				if (mode_cur == 0) {
 					Log.i("TEST", "MODE 0 STOP Service");
-					stopService(new Intent(BleListActivity.this,
-							notService.class));
+					//BR
+					Intent intent = new Intent("com.catchwave.mode.signal");
+					intent.putExtra("MODE", false);
+					sendBroadcast(intent);
+					//Service
+					if (notService.IsNoticeService)
+						stopService(new Intent(BleListActivity.this,
+								notService.class));
 				}
 				// Start Service
 				if (mode_cur == 1) {
 					Log.i("TEST", "MODE 1 START Service");
-					startService(new Intent(BleListActivity.this,
-							notService.class));
+					//BR
+					Intent intent = new Intent("com.catchwave.mode.signal");
+					intent.putExtra("MODE", true);
+					sendBroadcast(intent);
+					//Service
+					if (!notService.IsNoticeService)
+						startService(new Intent(BleListActivity.this,
+								notService.class));
 				}
 			}
 		});
