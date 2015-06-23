@@ -45,14 +45,10 @@ public class TcpGetter extends Thread {
 				input.read(datafile);
 				audioTrack.write(datafile, 0, datafile.length);
 			}
-<<<<<<< HEAD
+
 			sock.close();
 		} 
 		catch (Exception e) {
-=======
-
-		} catch (Exception e) {
->>>>>>> 781d002d7d14ae60a24d8cff9985364a923c2991
 			e.printStackTrace();
 			try {
 				sock.close();
