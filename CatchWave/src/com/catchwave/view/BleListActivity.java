@@ -70,6 +70,12 @@ public class BleListActivity extends Activity {
 			finish();
 		}
 
+		// 리스트뷰 세팅
+		ble_arr = new ArrayList<BleVO>();
+		adapter = new BleListAdapter(this, ble_arr);
+		ListView list = (ListView) findViewById(R.id.ble_listView);
+		list.setAdapter(adapter);
+
 		final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 		mBluetoothAdapter = bluetoothManager.getAdapter();
 
@@ -100,19 +106,7 @@ public class BleListActivity extends Activity {
 		// SharedPreferences
 		SharedPreferences pref = getSharedPreferences("SaveState", 0);
 		mode_cur = pref.getInt("MODE", 0);
-	}
 
-	@Override
-	protected void onResume() {
-		super.onResume();
-
-		// 리스트뷰 세팅
-		ble_arr = new ArrayList<BleVO>();
-		adapter = new BleListAdapter(this, ble_arr);
-		ListView list = (ListView) findViewById(R.id.ble_listView);
-		list.setAdapter(adapter);
-
-		// OnResume시에 SCANNING
 		if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
 			Intent enableBtIntent = new Intent(
 					BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -122,6 +116,11 @@ public class BleListActivity extends Activity {
 					mBluetoothAdapter, mHandler);
 			bleScanner.start();
 		}
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
 	}
 
 	@Override

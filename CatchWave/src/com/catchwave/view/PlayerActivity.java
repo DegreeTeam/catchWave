@@ -61,6 +61,7 @@ public class PlayerActivity extends Activity {
 		mFloatingButton1.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View view) {
+				
 				finish();
 			}
 		});

@@ -12,13 +12,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.catchwave.view.PlayerActivity;
 import com.catchwave.view.R;
 import com.catchwave.vo.BleVO;
-import com.gc.materialdesign.views.Button;
 import com.gc.materialdesign.views.ButtonRectangle;
 import com.util.WifiConnector;
 
