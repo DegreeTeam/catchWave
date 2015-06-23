@@ -14,11 +14,9 @@ import com.catchwave.view.PlayerActivity;
 import com.util.TcpGetter;
 
 public class PlayService extends Service {
-<<<<<<< HEAD
+
 	final int SAMPLE_RATE = 40960;
-=======
-	final int SAMPLE_RATE = 22400;
->>>>>>> 902c35e257024e9d9d4597218e0a686dcf0edd6c
+
 	int minSize = AudioTrack.getMinBufferSize(SAMPLE_RATE,
 			AudioFormat.CHANNEL_CONFIGURATION_MONO,
 			AudioFormat.ENCODING_PCM_8BIT);
