@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -15,6 +16,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -66,18 +69,9 @@ public class BleListActivity extends Activity {
 			Toast.makeText(this, "BLE를 지원하지 않습니다.", 0);
 			finish();
 		}
+
 		final BluetoothManager bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
 		mBluetoothAdapter = bluetoothManager.getAdapter();
-
-		// 리스트뷰 세팅
-		ble_arr = new ArrayList<BleVO>();
-		BleVO test = new BleVO();
-		test.setSsid("test");
-		ble_arr.add(test);
-		adapter = new BleListAdapter(this, ble_arr);
-
-		ListView list = (ListView) findViewById(R.id.ble_listView);
-		list.setAdapter(adapter);
 
 		// BLE 스캔 기능
 		mFloatingButton = (FloatingActionButton) findViewById(R.id.scan);
@@ -90,13 +84,14 @@ public class BleListActivity extends Activity {
 				// enabled. If not,
 				// displays a dialog requesting user permission to enable
 				// Bluetooth.
+
 				if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
 					Intent enableBtIntent = new Intent(
 							BluetoothAdapter.ACTION_REQUEST_ENABLE);
 					startActivityForResult(enableBtIntent, 2);
 				} else {
-					BleScanner bleScanner = new BleScanner(mBluetoothAdapter,
-							mHandler);
+					BleScanner bleScanner = new BleScanner(
+							BleListActivity.this, mBluetoothAdapter, mHandler);
 					bleScanner.start();
 				}
 			}
@@ -105,6 +100,28 @@ public class BleListActivity extends Activity {
 		// SharedPreferences
 		SharedPreferences pref = getSharedPreferences("SaveState", 0);
 		mode_cur = pref.getInt("MODE", 0);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+
+		// 리스트뷰 세팅
+		ble_arr = new ArrayList<BleVO>();
+		adapter = new BleListAdapter(this, ble_arr);
+		ListView list = (ListView) findViewById(R.id.ble_listView);
+		list.setAdapter(adapter);
+
+		// OnResume시에 SCANNING
+		if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+			Intent enableBtIntent = new Intent(
+					BluetoothAdapter.ACTION_REQUEST_ENABLE);
+			startActivityForResult(enableBtIntent, 2);
+		} else {
+			BleScanner bleScanner = new BleScanner(BleListActivity.this,
+					mBluetoothAdapter, mHandler);
+			bleScanner.start();
+		}
 	}
 
 	@Override
@@ -149,11 +166,11 @@ public class BleListActivity extends Activity {
 				// Stop Service
 				if (mode_cur == 0) {
 					Log.i("TEST", "MODE 0 STOP Service");
-					//BR
+					// BR
 					Intent intent = new Intent("com.catchwave.mode.signal");
 					intent.putExtra("MODE", false);
 					sendBroadcast(intent);
-					//Service
+					// Service
 					if (notService.IsNoticeService)
 						stopService(new Intent(BleListActivity.this,
 								notService.class));
@@ -161,11 +178,11 @@ public class BleListActivity extends Activity {
 				// Start Service
 				if (mode_cur == 1) {
 					Log.i("TEST", "MODE 1 START Service");
-					//BR
+					// BR
 					Intent intent = new Intent("com.catchwave.mode.signal");
 					intent.putExtra("MODE", true);
 					sendBroadcast(intent);
-					//Service
+					// Service
 					if (!notService.IsNoticeService)
 						startService(new Intent(BleListActivity.this,
 								notService.class));
@@ -194,6 +211,10 @@ public class BleListActivity extends Activity {
 			case 1:
 				ble_arr.clear();
 				ble_arr.addAll((ArrayList<BleVO>) msg.obj);
+				if (ble_arr.size() == 0) {
+					Toast.makeText(getApplicationContext(),
+							"THERE IS NO BLE SIGNAL", Toast.LENGTH_LONG).show();
+				}
 				adapter.notifyDataSetChanged();
 				break;
 			}

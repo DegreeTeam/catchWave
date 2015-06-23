@@ -1,19 +1,22 @@
 package com.catchwave.view;
 
-import com.catchwave.service.notService;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import com.catchwave.service.notService;
 
 public class PopupActivity extends Activity {
 	public static boolean IsPopup = false;
@@ -25,6 +28,7 @@ public class PopupActivity extends Activity {
 
 	// PopupActivity Click Event
 	public void PopupClick(View v) {
+		v.setBackgroundColor(Color.parseColor("#AAAAAA"));
 		switch (v.getId()) {
 		case R.id.btn1:
 			Intent intent = new Intent(this, LogoActivity.class);
@@ -45,8 +49,13 @@ public class PopupActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_pop);
 
+		// requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+		// WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
 		tv = (TextView) findViewById(R.id.tv);
 		imgbtn = (ImageButton) findViewById(R.id.setbtn);
+		imgbtn.setAlpha(0.4f);
 		imgbtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View view) {
 				ScanDialogRadio();
@@ -129,6 +138,7 @@ public class PopupActivity extends Activity {
 		tv.setPaintFlags(tv.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
 		tv.setTextScaleX(2.0f);
 		tv.setText(name);
+		tv.setGravity(Gravity.CENTER);
 		cur = BleListActivity.mode_cur;
 	}
 

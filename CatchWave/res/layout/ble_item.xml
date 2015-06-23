@@ -1,26 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#E6E6E6" >
+    android:layout_height="110dp"
+    android:layout_marginBottom="5dp"
+    android:layout_marginTop="5dp"
+    android:background="#88cbe7e0"
+    android:orientation="vertical" >
 
-    <Button
-        android:id="@+id/wifi_connect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView1"
-        android:layout_alignBottom="@+id/textView1"
-        android:layout_alignParentRight="true"
-        android:text="WIFI" />
+    <!-- RECTANGLE BUTTON -->
 
-    <TextView
-        android:id="@+id/ssid"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="18dp"
-        android:text="SSID" />
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="32dp"
+        android:layout_marginLeft="24dp" >
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/ssid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="SSID" />
+
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_alignParentBottom="true"
+            android:background="#53E6C5" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="72dp" >
+
+        <com.gc.materialdesign.views.ButtonRectangle
+            android:id="@+id/wifi_connect"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="#53E6C5"
+            android:text="Connect"
+            android:textStyle="bold" />
+    </RelativeLayout>
+
+</LinearLayout>
