@@ -13,21 +13,25 @@ import android.widget.ToggleButton;
 
 import com.catchwave.floatingactionbutton.FloatingActionButton;
 import com.catchwave.service.PlayService;
+import com.util.WifiChecker;
 
 public class PlayerActivity extends Activity {
 
+	public static boolean IsPlayer = false;
 	public static Activity playerActivity;
 	private FloatingActionButton mFloatingButton1;
 	private ToggleButton tgn;
+
 	String uuidData;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
+		IsPlayer = true;
 		playerActivity = this;
-		setContentView(R.layout.activity_player);
 
+		setContentView(R.layout.activity_player);
 		// ActionBar 설정 변경
 		getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
 		getActionBar().setCustomView(R.layout.action_layout);
@@ -78,12 +82,23 @@ public class PlayerActivity extends Activity {
 				}
 			}
 		});
+
+	}
+
+	@Override
+	protected void onResume() {
+		new WifiChecker(PlayerActivity.this).execute();
+		super.onResume();
+
 	}
 
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-		super.onDestroy();
+		IsPlayer = false;
 		stopService(new Intent(getApplicationContext(), PlayService.class));
+		super.onDestroy();
+
 	}
+
 }

@@ -12,13 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.catchwave.view.PlayerActivity;
 import com.catchwave.view.R;
 import com.catchwave.vo.BleVO;
+import com.gc.materialdesign.views.Button;
+import com.gc.materialdesign.views.ButtonRectangle;
 import com.util.WifiConnector;
 
 public class BleListAdapter extends BaseAdapter {
@@ -59,7 +60,8 @@ public class BleListAdapter extends BaseAdapter {
 		// TODO Auto-generated method stub
 		convertView = inflater.inflate(R.layout.ble_item, parent, false);
 		TextView ssid = (TextView) convertView.findViewById(R.id.ssid);
-		Button wifi = (Button) convertView.findViewById(R.id.wifi_connect);
+		ButtonRectangle wifi = (ButtonRectangle) convertView
+				.findViewById(R.id.wifi_connect);
 
 		final String ssidName = arSrc.get(position).getSsid();
 		ssid.setText(ssidName);
@@ -78,12 +80,14 @@ public class BleListAdapter extends BaseAdapter {
 						new Timer().schedule(new TimerTask() {
 							@Override
 							public void run() {
-								Intent intent = new Intent(maincon,
-										PlayerActivity.class);
-								intent.putExtra("UUID", ssidName);
-								maincon.startActivity(intent);
+								if (!PlayerActivity.IsPlayer) {
+									Intent intent = new Intent(maincon,
+											PlayerActivity.class);
+									intent.putExtra("UUID", ssidName);
+									maincon.startActivity(intent);
+								}
 							}
-						}, 1500);
+						}, 500);
 					}
 				} else {
 					Toast.makeText(maincon, "연결 버튼을 한번 더 눌러주세요", 0).show();
