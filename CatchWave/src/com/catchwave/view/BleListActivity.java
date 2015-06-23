@@ -211,8 +211,11 @@ public class BleListActivity extends Activity {
 			case 1:
 				ble_arr.clear();
 				ble_arr.addAll((ArrayList<BleVO>) msg.obj);
+				if (ble_arr.size() == 0) {
+					Toast.makeText(getApplicationContext(),
+							"THERE IS NO BLE SIGNAL", Toast.LENGTH_LONG).show();
+				}
 				adapter.notifyDataSetChanged();
-
 				break;
 			}
 		}

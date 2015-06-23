@@ -1,8 +1,6 @@
 package com.util;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
@@ -21,43 +19,54 @@ public class BleScanner extends Thread {
 	private Handler mHandler;
 	private ProgressDialog progressDialog;
 	private Context mContext;
-	private static final long SCAN_PERIOD = 2000;
+	private boolean IsCallBack = true;
+	private static final long SCAN_PERIOD = 1300;
+	private int count = 0;
+	private int tcount = 0;
 
 	@Override
 	public void run() {
-		scanLeDevice(true);
-		new Timer().schedule(new TimerTask() {
-			@Override
-			public void run() {
-				Message mess = mHandler.obtainMessage();
-				mess.what = 1;
-				mess.obj = ble_list;
-
-				mHandler.sendMessage(mess);
-				progressDialog.dismiss();
+		while (IsCallBack) {
+			try {
+				if (++tcount == 20)
+					break;
+				scanLeDevice(true);
+				Thread.sleep(SCAN_PERIOD + 200);
+			} catch (Exception e) {
 			}
-		}, SCAN_PERIOD + 500);
+
+		}
+		mBluetoothAdapter.stopLeScan(mLeScanCallback);
+		Message mess = mHandler.obtainMessage();
+		mess.what = 1;
+		mess.obj = ble_list;
+		progressDialog.dismiss();
+
+		mHandler.sendMessage(mess);
 	}
 
 	public BleScanner(Context context, BluetoothAdapter mBluetoothAdapter,
 			Handler mHandler) {
-
 		super();
 		this.mContext = context;
 		this.mBluetoothAdapter = mBluetoothAdapter;
 		this.mHandler = mHandler;
 		ble_list = new ArrayList<BleVO>();
+		ble_list.clear();
 
 		progressDialog = new ProgressDialog(mContext);
 		progressDialog.setCanceledOnTouchOutside(false);
-		progressDialog.setMessage("BLUETOOTH SCANNING");
+		progressDialog.setMessage("BLUETOOTH SCANNING...");
 		progressDialog.show();
+
+		Log.i("BLE", "START");
 	}
 
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
 
 		@Override
 		public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+			Log.i("BLE", "CALLBACK");
 			String ssid = new String();
 			String pw = new String();
 			Byte[] id = new Byte[4];
@@ -94,12 +103,13 @@ public class BleScanner extends Thread {
 				}
 
 			}
-
+			if ((++count) >= 3)
+				IsCallBack = false;
 		}
 	};
 
 	public void scanLeDevice(final boolean enable) {
-		ble_list.clear();
+		Log.i("BLE", "ScanLeDevice");
 		if (enable) {
 			// Stops scanning after a pre-defined scan period.
 			mHandler.postDelayed(new Runnable() {

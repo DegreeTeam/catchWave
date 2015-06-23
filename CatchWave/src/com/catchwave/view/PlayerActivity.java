@@ -69,16 +69,20 @@ public class PlayerActivity extends Activity {
 		tgn = (ToggleButton) findViewById(R.id.playbtn);
 		tgn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				if (tgn.isChecked()) {
-					startService(new Intent(getApplicationContext(),
-							PlayService.class));
-					tgn.setBackgroundDrawable(getResources().getDrawable(
-							R.drawable.center_stop));
-				} else {
-					stopService(new Intent(getApplicationContext(),
-							PlayService.class));
-					tgn.setBackgroundDrawable(getResources().getDrawable(
-							R.drawable.center));
+				try {
+					if (tgn.isChecked()) {
+						startService(new Intent(getApplicationContext(),
+								PlayService.class));
+						tgn.setBackgroundDrawable(getResources().getDrawable(
+								R.drawable.center_stop));
+					} else {
+						stopService(new Intent(getApplicationContext(),
+								PlayService.class));
+						tgn.setBackgroundDrawable(getResources().getDrawable(
+								R.drawable.center));
+					}
+				} catch (Exception e) {
+					new WifiChecker(PlayerActivity.this).execute();
 				}
 			}
 		});

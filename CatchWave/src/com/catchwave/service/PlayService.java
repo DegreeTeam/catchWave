@@ -12,10 +12,9 @@ import android.os.Message;
 
 import com.catchwave.view.PlayerActivity;
 import com.util.TcpGetter;
-import com.util.UdpGetter;
 
 public class PlayService extends Service {
-	final int SAMPLE_RATE = 44100;
+	final int SAMPLE_RATE = 22400;
 	int minSize = AudioTrack.getMinBufferSize(SAMPLE_RATE,
 			AudioFormat.CHANNEL_CONFIGURATION_MONO,
 			AudioFormat.ENCODING_PCM_8BIT);
@@ -23,8 +22,7 @@ public class PlayService extends Service {
 			SAMPLE_RATE, AudioFormat.CHANNEL_CONFIGURATION_MONO,
 			AudioFormat.ENCODING_PCM_8BIT, minSize, AudioTrack.MODE_STREAM);
 
-	//TcpGetter getter;
-	UdpGetter getter;
+	TcpGetter getter;
 
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -42,7 +40,7 @@ public class PlayService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
-		getter = new UdpGetter(audioTrack, mHandler);
+		getter = new TcpGetter(audioTrack, mHandler);
 		getter.start();
 		return super.onStartCommand(intent, flags, startId);
 	}
