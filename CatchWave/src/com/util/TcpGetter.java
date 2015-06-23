@@ -45,7 +45,7 @@ public class TcpGetter extends Thread {
 				input.read(datafile);
 				audioTrack.write(datafile, 0, datafile.length);
 			}
-			
+			sock.close();
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
