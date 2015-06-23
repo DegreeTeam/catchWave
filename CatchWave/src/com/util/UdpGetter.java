@@ -1,7 +1,8 @@
 package com.util;
 
 import java.io.DataInputStream;
-import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 
@@ -10,7 +11,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
-public class TcpGetter extends Thread {
+public class UdpGetter extends Thread{
+	private static final int TIMEOUT = 2000;
 	public static final String SERVER_NAME = "192.168.42.1";
 	protected static final int PORT = 2008;
 	Socket sock;
@@ -18,7 +20,7 @@ public class TcpGetter extends Thread {
 	private boolean thread_flag;
 	Handler mHandler;
 
-	public TcpGetter(AudioTrack audioTrack, Handler mHandler) {
+	public UdpGetter(AudioTrack audioTrack, Handler mHandler) {
 		this.audioTrack = audioTrack;
 		thread_flag = true;
 		this.mHandler = mHandler;
@@ -30,37 +32,35 @@ public class TcpGetter extends Thread {
 
 	@Override
 	public void run() {
-		byte[] datafile = new byte[32];
-
+		byte[] msg = new byte[1024];
+		byte[] ack = {1};
 		DataInputStream input;
 		InetAddress serverAddr;
+		Integer udp_port;
+		DatagramSocket datagramSocket = null;
 		try {
+			datagramSocket= new DatagramSocket();
 			serverAddr = InetAddress.getByName(SERVER_NAME);
-			Log.d("tes", "before sock");
 			sock = new Socket(serverAddr, PORT);
-			Log.d("tes", "after sock");
 			input = new DataInputStream(sock.getInputStream());
-
-			while (thread_flag) {
-				input.read(datafile);
-				audioTrack.write(datafile, 0, datafile.length);
-			}
-<<<<<<< HEAD
+			udp_port = input.readInt();
+			Log.d("tes", "udp_port is "+ udp_port);
 			sock.close();
-		} 
-		catch (Exception e) {
-=======
+			
+			 
+			datagramSocket.setSoTimeout(TIMEOUT);
+			DatagramPacket outPacket = new DatagramPacket(ack, 1, serverAddr, udp_port);
+		    DatagramPacket inPacket = new DatagramPacket(msg, msg.length);
+		    sleep(1000);
+			while (thread_flag) {
+				datagramSocket.send(outPacket);    
+		        datagramSocket.receive(inPacket);  
+				audioTrack.write(msg, 0, msg.length);
+			}
 
 		} catch (Exception e) {
->>>>>>> 781d002d7d14ae60a24d8cff9985364a923c2991
 			e.printStackTrace();
-			try {
-				sock.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			Log.d("tes", "sock error");
+			datagramSocket.close();
 
 			// 예외 메시지
 			Message mess = mHandler.obtainMessage();
@@ -69,3 +69,4 @@ public class TcpGetter extends Thread {
 		}
 	}
 }
+

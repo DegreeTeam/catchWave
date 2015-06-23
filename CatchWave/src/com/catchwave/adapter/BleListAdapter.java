@@ -3,9 +3,8 @@ package com.catchwave.adapter;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
+
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -16,12 +15,10 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.catchwave.view.BleListActivity;
-import com.catchwave.view.LogoActivity;
+
 import com.catchwave.view.PlayerActivity;
 import com.catchwave.view.R;
 import com.catchwave.vo.BleVO;
-import com.util.BleScanner;
 import com.util.WifiConnector;
 
 public class BleListAdapter extends BaseAdapter {
@@ -36,8 +33,9 @@ public class BleListAdapter extends BaseAdapter {
 		this.arSrc = arSrc;
 		inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		
+
 	}
+
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub
@@ -62,9 +60,9 @@ public class BleListAdapter extends BaseAdapter {
 		convertView = inflater.inflate(R.layout.ble_item, parent, false);
 		TextView ssid = (TextView) convertView.findViewById(R.id.ssid);
 		Button wifi = (Button) convertView.findViewById(R.id.wifi_connect);
-		
-		ssid.setText(arSrc.get(position).getSsid());
-		
+
+		final String ssidName = arSrc.get(position).getSsid();
+		ssid.setText(ssidName);
 		wifi.setTag(position);
 		wifi.setOnClickListener(new Button.OnClickListener() {
 			@SuppressLint("ShowToast")
@@ -72,26 +70,27 @@ public class BleListAdapter extends BaseAdapter {
 			public void onClick(View view) {
 				int position = (Integer) view.getTag();
 				Log.d("test", arSrc.get(position).getSsid());
-		        
-		        WifiConnector connector = new WifiConnector(maincon);
-		        if(connector.isConnect()){
-			        if(connector.connectWifi(arSrc.get(position).getSsid(), arSrc.get(position).getPw())){
-			        	 new Timer().schedule(new TimerTask() {          
-			     		    @Override
-			     		    public void run() {
-						        Intent intent = new Intent( maincon, PlayerActivity.class);
-						        maincon.startActivity(intent);
-			     		    }
-			     		}, 1500);
-			        }
-		        }
-		        else{
-		        	Toast.makeText(maincon, "연결 버튼을 한번 더 눌러주세요", 0).show();
-		        }
+
+				WifiConnector connector = new WifiConnector(maincon);
+				if (connector.isConnect()) {
+					if (connector.connectWifi(arSrc.get(position).getSsid(),
+							arSrc.get(position).getPw())) {
+						new Timer().schedule(new TimerTask() {
+							@Override
+							public void run() {
+								Intent intent = new Intent(maincon,
+										PlayerActivity.class);
+								intent.putExtra("UUID", ssidName);
+								maincon.startActivity(intent);
+							}
+						}, 1500);
+					}
+				} else {
+					Toast.makeText(maincon, "연결 버튼을 한번 더 눌러주세요", 0).show();
+				}
 			}
-        });
-		
+		});
+
 		return convertView;
 	}
-
 }
