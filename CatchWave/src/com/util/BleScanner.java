@@ -37,10 +37,10 @@ public class BleScanner extends Thread {
 
 		}
 		mBluetoothAdapter.stopLeScan(mLeScanCallback);
+		progressDialog.dismiss();
 		Message mess = mHandler.obtainMessage();
 		mess.what = 1;
 		mess.obj = ble_list;
-		progressDialog.dismiss();
 
 		mHandler.sendMessage(mess);
 	}

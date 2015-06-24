@@ -35,7 +35,7 @@ public class LogoActivity extends Activity {
 
 			intent = new Intent(LogoActivity.this, PlayerActivity.class);
 			intent.putExtra("UUID", ssid);
-			time = 5500;
+			time = 3000;
 
 			// }
 		} catch (Exception e) {

@@ -2,7 +2,6 @@ package com.util;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 
 public class WifiChecker extends AsyncTask<Void, Void, Void> {
@@ -25,11 +24,11 @@ public class WifiChecker extends AsyncTask<Void, Void, Void> {
 
 	@Override
 	protected Void doInBackground(Void... v) {
-		WifiManager wManager = (WifiManager) mContext
-				.getSystemService(Context.WIFI_SERVICE);
-
-		while (!check) {
-			check = wManager.isWifiEnabled();
+		// WifiManager wManager = (WifiManager) mContext
+		// .getSystemService(Context.WIFI_SERVICE);
+		try {
+			Thread.sleep(3000);
+		} catch (Exception e) {
 		}
 		return (Void) null;
 	}

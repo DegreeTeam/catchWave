@@ -8,7 +8,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,8 +15,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Paint;
 import android.graphics.Typeface;
-import android.net.NetworkInfo;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -90,6 +87,12 @@ public class BleListActivity extends Activity {
 				// enabled. If not,
 				// displays a dialog requesting user permission to enable
 				// Bluetooth.
+
+				// 리스트뷰 세팅
+				ble_arr = new ArrayList<BleVO>();
+				adapter = new BleListAdapter(BleListActivity.this, ble_arr);
+				ListView list = (ListView) findViewById(R.id.ble_listView);
+				list.setAdapter(adapter);
 
 				if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
 					Intent enableBtIntent = new Intent(

@@ -15,7 +15,7 @@ import com.util.UdpGetter;
 
 public class PlayService extends Service {
 
-	final int SAMPLE_RATE = 40960;
+	final int SAMPLE_RATE = 45056;
 
 	int minSize = AudioTrack.getMinBufferSize(SAMPLE_RATE,
 			AudioFormat.CHANNEL_CONFIGURATION_MONO,

@@ -27,10 +27,11 @@ public class PlayerActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
+
 		super.onCreate(savedInstanceState);
 		IsPlayer = true;
 		playerActivity = this;
-
+		new WifiChecker(PlayerActivity.this).execute();
 		setContentView(R.layout.activity_player);
 		// ActionBar 설정 변경
 		getActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
@@ -61,7 +62,7 @@ public class PlayerActivity extends Activity {
 		mFloatingButton1.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-				
+
 				finish();
 			}
 		});
@@ -92,7 +93,6 @@ public class PlayerActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		new WifiChecker(PlayerActivity.this).execute();
 		super.onResume();
 
 	}

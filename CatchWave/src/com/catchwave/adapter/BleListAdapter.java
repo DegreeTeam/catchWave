@@ -67,34 +67,42 @@ public class BleListAdapter extends BaseAdapter {
 		ssid.setText(ssidName);
 		wifi.setTag(position);
 		wifi.setOnClickListener(new Button.OnClickListener() {
+
 			@SuppressLint("ShowToast")
 			@Override
 			public void onClick(View view) {
-				int position = (Integer) view.getTag();
-				Log.d("test", arSrc.get(position).getSsid());
+				try {
+					int position = (Integer) view.getTag();
+					Log.d("test", arSrc.get(position).getSsid());
+					WifiConnector connector = new WifiConnector(maincon);
+					boolean wififlag = connector.isConnect();
 
-				WifiConnector connector = new WifiConnector(maincon);
-				if (connector.isConnect()) {
-					if (connector.connectWifi(arSrc.get(position).getSsid(),
-							arSrc.get(position).getPw())) {
-						new Timer().schedule(new TimerTask() {
-							@Override
-							public void run() {
-								if (!PlayerActivity.IsPlayer) {
-									Intent intent = new Intent(maincon,
-											PlayerActivity.class);
-									intent.putExtra("UUID", ssidName);
-									maincon.startActivity(intent);
+					if (wififlag) {
+						if (connector.connectWifi(
+								arSrc.get(position).getSsid(),
+								arSrc.get(position).getPw())) {
+							new Timer().schedule(new TimerTask() {
+								@Override
+								public void run() {
+									if (!PlayerActivity.IsPlayer) {
+										Intent intent = new Intent(maincon,
+												PlayerActivity.class);
+										intent.putExtra("UUID", ssidName);
+										maincon.startActivity(intent);
+									}
 								}
-							}
-						}, 500);
+							}, 500);
+						}
+					} else {
+						Toast.makeText(maincon, "연결 버튼을 한번 더 눌러주세요", 0).show();
 					}
-				} else {
-					Toast.makeText(maincon, "연결 버튼을 한번 더 눌러주세요", 0).show();
+				} catch (Exception e) {
+					Log.e("ERROR", "BLELISTADAPTER");
 				}
 			}
 		});
 
 		return convertView;
+
 	}
 }
