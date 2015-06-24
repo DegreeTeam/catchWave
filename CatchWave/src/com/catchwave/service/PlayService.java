@@ -11,7 +11,6 @@ import android.os.IBinder;
 import android.os.Message;
 
 import com.catchwave.view.PlayerActivity;
-import com.util.TcpGetter;
 import com.util.UdpGetter;
 
 public class PlayService extends Service {
