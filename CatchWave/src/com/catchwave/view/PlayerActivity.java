@@ -89,12 +89,12 @@ public class PlayerActivity extends Activity {
 
 	}
 
-	@Override
-	protected void onResume() {
-		new WifiChecker(PlayerActivity.this).execute();
-		super.onResume();
-
-	}
+//	@Override
+//	protected void onResume() {
+//		new WifiChecker(PlayerActivity.this).execute();
+//		super.onResume();
+//
+//	}
 
 	@Override
 	protected void onDestroy() {

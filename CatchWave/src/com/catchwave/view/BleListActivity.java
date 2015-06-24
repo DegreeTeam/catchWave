@@ -112,16 +112,16 @@ public class BleListActivity extends Activity {
 		ListView list = (ListView) findViewById(R.id.ble_listView);
 		list.setAdapter(adapter);
 
-		// OnResume시에 SCANNING
-		if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
-			Intent enableBtIntent = new Intent(
-					BluetoothAdapter.ACTION_REQUEST_ENABLE);
-			startActivityForResult(enableBtIntent, 2);
-		} else {
-			BleScanner bleScanner = new BleScanner(BleListActivity.this,
-					mBluetoothAdapter, mHandler);
-			bleScanner.start();
-		}
+//		// OnResume시에 SCANNING
+//		if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
+//			Intent enableBtIntent = new Intent(
+//					BluetoothAdapter.ACTION_REQUEST_ENABLE);
+//			startActivityForResult(enableBtIntent, 2);
+//		} else {
+//			BleScanner bleScanner = new BleScanner(BleListActivity.this,
+//					mBluetoothAdapter, mHandler);
+//			bleScanner.start();
+//		}
 	}
 
 	@Override

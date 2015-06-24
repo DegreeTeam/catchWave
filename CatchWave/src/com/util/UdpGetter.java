@@ -1,6 +1,7 @@
 package com.util;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -69,7 +70,21 @@ public class UdpGetter extends Thread {
 			sleep(1000);
 			
 			while (thread_flag) {
-				datagramSocket.send(outPacket);
+				boolean send_flag = true;
+				while(send_flag){
+					try{
+						datagramSocket.send(outPacket);
+					}
+					catch(IOException e){
+						send_flag = false;
+					}
+					finally{
+						if(send_flag){
+							break;
+						}
+						send_flag = true;
+					}
+				}
 				datagramSocket.receive(inPacket);
 				count++;
 				if(!isSameByte(msg, comp)){
