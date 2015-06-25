@@ -2,9 +2,11 @@ package com.catchwave.view;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,8 +23,10 @@ public class PlayerActivity extends Activity {
 	public static Activity playerActivity;
 	private FloatingActionButton mFloatingButton1;
 	private ToggleButton tgn;
+	private String uuidData;
 
-	String uuidData;
+	// Audio
+	private AudioManager mgr = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,13 +77,18 @@ public class PlayerActivity extends Activity {
 			public void onClick(View v) {
 				try {
 					if (tgn.isChecked()) {
-						startService(new Intent(getApplicationContext(),
-								PlayService.class));
+						if (!PlayService.IsPlaySer) {
+							startService(new Intent(getApplicationContext(),
+									PlayService.class));
+						} else {
+							mgr.setStreamMute(AudioManager.STREAM_MUSIC, false);
+						}
 						tgn.setBackgroundDrawable(getResources().getDrawable(
 								R.drawable.center_stop));
 					} else {
-						stopService(new Intent(getApplicationContext(),
-								PlayService.class));
+						mgr.setStreamMute(AudioManager.STREAM_MUSIC, true);
+						// stopService(new Intent(getApplicationContext(),
+						// PlayService.class));
 						tgn.setBackgroundDrawable(getResources().getDrawable(
 								R.drawable.center));
 					}
@@ -88,6 +97,9 @@ public class PlayerActivity extends Activity {
 				}
 			}
 		});
+
+		// Audio
+		mgr = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
 	}
 

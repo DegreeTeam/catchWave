@@ -2,7 +2,7 @@
 #define DSP_H
 
 #include <android/log.h>
-#define DataLen    		1024
+#define DataLen    		32
 #define FilterLen       9
 #define DOWN_FACTOR   	2
 #define NO_SOUND_DATA   127

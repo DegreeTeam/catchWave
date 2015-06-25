@@ -22,7 +22,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:src="@drawable/refresh"
+        android:src="@drawable/back"
         fab:fab_colorNormal="#53E6C5"
         fab:fab_colorPressed="#40D3B2" />
 

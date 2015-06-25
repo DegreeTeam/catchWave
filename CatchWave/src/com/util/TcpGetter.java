@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import com.catchwave.jni.DSPforJNI;
+
 import android.media.AudioTrack;
 import android.os.Handler;
 import android.os.Message;
@@ -17,11 +19,13 @@ public class TcpGetter extends Thread {
 	private AudioTrack audioTrack;
 	private boolean thread_flag;
 	Handler mHandler;
+	DSPforJNI dsp;
 
 	public TcpGetter(AudioTrack audioTrack, Handler mHandler) {
 		this.audioTrack = audioTrack;
 		thread_flag = true;
 		this.mHandler = mHandler;
+		dsp = new DSPforJNI();
 	}
 
 	public void setThread_flag(boolean thread_flag) {
@@ -43,12 +47,11 @@ public class TcpGetter extends Thread {
 
 			while (thread_flag) {
 				input.read(datafile);
-				audioTrack.write(datafile, 0, datafile.length);
+				audioTrack.write(dsp.playAfterDSP(datafile), 0,
+						datafile.length * 2);
 			}
 			sock.close();
-		} 
-		catch (Exception e) {
-
+		} catch (Exception e) {
 			e.printStackTrace();
 			try {
 				sock.close();

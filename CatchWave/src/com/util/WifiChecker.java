@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 public class WifiChecker extends AsyncTask<Void, Void, Void> {
 	private ProgressDialog progressDialog;
 	private Context mContext;
-	private boolean check = false;
 
 	public WifiChecker(Context context) {
 		this.mContext = context;

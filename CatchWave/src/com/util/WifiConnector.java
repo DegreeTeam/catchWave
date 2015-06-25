@@ -4,7 +4,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.util.Log;
@@ -34,7 +33,6 @@ public class WifiConnector {
 			return false;
 		}
 		return true;
-
 	}
 
 	public boolean connectWifi(String ssid, String pw) {

@@ -26,10 +26,10 @@ JNIEXPORT jbyteArray JNICALL Java_com_catchwave_jni_DSPforJNI_DSPfromJNI(
 //			(short) M[25], (short) M[26], (short) M[27], (short) M[28],
 //			(short) M[29], (short) M[30], (short) M[31]);
 
-//	for (i = 0; i < 32; i++) {
-//		if (((short) M[i] != -128) && ((short) M[i] != 127))
-//			break;
-//	}
+	for (i = 0; i < 32; i++) {
+		if (((short) M[i] != -128) && ((short) M[i] != 127))
+			break;
+	}
 
 	if (i == 32) {
 		javaPauseSound(result);
