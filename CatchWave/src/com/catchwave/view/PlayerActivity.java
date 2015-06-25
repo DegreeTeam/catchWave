@@ -112,6 +112,7 @@ public class PlayerActivity extends Activity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		IsPlayer = false;
+		mgr.setStreamMute(AudioManager.STREAM_MUSIC, false);
 		stopService(new Intent(getApplicationContext(), PlayService.class));
 		super.onDestroy();
 
