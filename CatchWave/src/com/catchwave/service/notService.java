@@ -31,6 +31,7 @@ public class notService extends Service {
 	private PowerManager pm;
 	private int count_noti = 0;
 	private boolean running = true;
+	private int count = 0;
 
 	// BluetoothCallBack
 	private BluetoothAdapter.LeScanCallback mLeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -69,6 +70,12 @@ public class notService extends Service {
 					startActivity(popupIntent);
 				}
 			}
+			// 일정 시간 후에 배열 초기화
+			if ((count++) == 1000) {
+				ble_list.clear();
+				count = 0;
+			}
+			
 			scanLeDevice(running);
 
 		}

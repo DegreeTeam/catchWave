@@ -28,18 +28,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.catchwave.adapter.BleListAdapter;
-import com.catchwave.floatingactionbutton.FloatingActionButton;
 import com.catchwave.service.notService;
 import com.catchwave.vo.BleVO;
+import com.gc.materialdesign.views.ButtonFloat;
 import com.util.BleScanner;
 
 public class BleListActivity extends Activity {
 
 	public static int mode_cur;
+
 	private BluetoothAdapter mBluetoothAdapter;
 	ArrayList<BleVO> ble_arr;
 	BleListAdapter adapter;
-	private FloatingActionButton mFloatingButton;
+
+	private ButtonFloat mButtonFloat;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,8 +79,8 @@ public class BleListActivity extends Activity {
 		mBluetoothAdapter = bluetoothManager.getAdapter();
 
 		// BLE ½ºÄµ ±â´É
-		mFloatingButton = (FloatingActionButton) findViewById(R.id.scan);
-		mFloatingButton.setOnClickListener(new Button.OnClickListener() {
+		mButtonFloat = (ButtonFloat) findViewById(R.id.scan);
+		mButtonFloat.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View view) {
 				// TODO Auto-generated method stub

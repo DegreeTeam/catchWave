@@ -13,15 +13,15 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.catchwave.floatingactionbutton.FloatingActionButton;
 import com.catchwave.service.PlayService;
+import com.gc.materialdesign.views.ButtonFloat;
 import com.util.WifiChecker;
 
 public class PlayerActivity extends Activity {
 
 	public static boolean IsPlayer = false;
 	public static Activity playerActivity;
-	private FloatingActionButton mFloatingButton1;
+	private ButtonFloat mButtonFloat;
 	private ToggleButton tgn;
 	private String uuidData;
 
@@ -62,11 +62,10 @@ public class PlayerActivity extends Activity {
 		tv.setText(name);
 
 		// Refresh Button
-		mFloatingButton1 = (FloatingActionButton) findViewById(R.id.scan2);
-		mFloatingButton1.setOnClickListener(new Button.OnClickListener() {
+		mButtonFloat = (ButtonFloat) findViewById(R.id.scan2);
+		mButtonFloat.setOnClickListener(new Button.OnClickListener() {
 			@Override
 			public void onClick(View view) {
-
 				finish();
 			}
 		});

@@ -20,22 +20,14 @@ public class BleScanner extends Thread {
 	private ProgressDialog progressDialog;
 	private Context mContext;
 	private boolean IsCallBack = true;
-	private static final long SCAN_PERIOD = 1300;
 	private int count = 0;
-	private int tcount = 0;
 
 	@Override
 	public void run() {
+		scanLeDevice(true);
 		while (IsCallBack) {
-			try {
-				if (++tcount == 20)
-					break;
-				scanLeDevice(true);
-				Thread.sleep(SCAN_PERIOD + 200);
-			} catch (Exception e) {
-			}
-
 		}
+
 		mBluetoothAdapter.stopLeScan(mLeScanCallback);
 		progressDialog.dismiss();
 		Message mess = mHandler.obtainMessage();
@@ -105,19 +97,14 @@ public class BleScanner extends Thread {
 			}
 			if ((++count) >= 3)
 				IsCallBack = false;
+			scanLeDevice(IsCallBack);
 		}
 	};
 
-	public void scanLeDevice(final boolean enable) {
-		Log.i("BLE", "ScanLeDevice");
+	// Scanning UUID
+	private void scanLeDevice(final boolean enable) {
+		Log.i("BLETEST", "SCANLEDEVICE");
 		if (enable) {
-			// Stops scanning after a pre-defined scan period.
-			mHandler.postDelayed(new Runnable() {
-				@Override
-				public void run() {
-					mBluetoothAdapter.stopLeScan(mLeScanCallback);
-				}
-			}, SCAN_PERIOD);
 			mBluetoothAdapter.startLeScan(mLeScanCallback);
 		} else {
 			mBluetoothAdapter.stopLeScan(mLeScanCallback);
