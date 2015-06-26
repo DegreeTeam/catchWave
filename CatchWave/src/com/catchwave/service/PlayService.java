@@ -9,6 +9,7 @@ import android.media.AudioTrack;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
+import android.widget.Toast;
 
 import com.catchwave.view.PlayerActivity;
 import com.util.TcpGetter;
@@ -65,8 +66,18 @@ public class PlayService extends Service {
 			switch (msg.what) {
 			case 1:
 				stopSelf();
+				Toast.makeText(getApplicationContext(), "다시 연결을 시도해 주세요.",
+						Toast.LENGTH_LONG).show();
 				PlayerActivity.playerActivity.finish();
+				break;
+			case 2:
+				stopSelf();
+				Toast.makeText(getApplicationContext(), "시청 가능한 최대 인원을 넘었습니다.",
+						Toast.LENGTH_LONG).show();
+				PlayerActivity.playerActivity.finish();
+				break;
 			}
+
 		}
 	};
 

@@ -71,11 +71,10 @@ public class notService extends Service {
 				}
 			}
 			// 일정 시간 후에 배열 초기화
-			if ((count++) == 1000) {
+			if ((count++) == 2000) {
 				ble_list.clear();
 				count = 0;
 			}
-			
 			scanLeDevice(running);
 
 		}
