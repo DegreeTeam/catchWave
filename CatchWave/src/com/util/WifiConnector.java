@@ -22,8 +22,11 @@ public class WifiConnector {
 
 	}
 
-	public boolean isConnect() {
+	public boolean isEnable() {
+		return wManager.isWifiEnabled();
+	}
 
+	public boolean isConnect() {
 		wManager = (WifiManager) this.context
 				.getSystemService(Context.WIFI_SERVICE);
 

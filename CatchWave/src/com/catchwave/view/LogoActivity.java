@@ -29,20 +29,28 @@ public class LogoActivity extends Activity {
 			Log.d("TEST", "Notification or Popupactivity : " + uuidData);
 			WifiConnector wifi = new WifiConnector(LogoActivity.this);
 
-			// delay Ω√≈∞±‚
 			wifi.isConnect();
-			wifi.connectWifi(ssid, pw);
 
 			intent = new Intent(LogoActivity.this, PlayerActivity.class);
 			intent.putExtra("UUID", ssid);
 			time = 3000;
 
-			// }
+			boolean wififlag = true;
+			wifi.isConnect();
+			while (wififlag) {
+				Log.i("BLUE", "CHECKING");
+				Thread.sleep(1000);
+				if (wifi.isEnable()) {
+					Log.i("BLUE", "CHECKING");
+					if (wifi.connectWifi(ssid, pw)) {
+						wififlag = false;
+					}
+				}
+			}
 		} catch (Exception e) {
 			Log.d("TEST", "normal");
 			intent = new Intent(LogoActivity.this, BleListActivity.class);
 			time = 1000;
-
 		}
 
 		new Timer().schedule(new TimerTask() {
