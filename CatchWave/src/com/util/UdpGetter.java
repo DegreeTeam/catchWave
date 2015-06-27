@@ -7,6 +7,8 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import com.util.UdpGet.Audio;
+
 import android.media.AudioTrack;
 import android.os.Handler;
 import android.os.Message;
@@ -18,9 +20,11 @@ public class UdpGetter extends Thread {
 	protected static final int PORT = 9000;
 	protected boolean flag = false;
 	Socket sock;
-	private AudioTrack audioTrack;
 	private boolean thread_flag;
 	Handler mHandler;
+	
+	private static AudioTrack audioTrack;
+	private static byte[] msg = new byte[512];
 
 	public UdpGetter(AudioTrack audioTrack, Handler mHandler) {
 		this.audioTrack = audioTrack;
@@ -42,16 +46,14 @@ public class UdpGetter extends Thread {
 	}
 	@Override
 	public void run() {
-		byte[] msg = new byte[2048];
-		byte[] comp = new byte[2048];
 		byte[] ack = { 1 };
 		byte[] udp_port_byte = new byte[4];
 		DataInputStream input;
 		InetAddress serverAddr;
 		Integer udp_port = 0;
 		DatagramSocket datagramSocket = null;
-		long count =0;
-		long count2 =0;
+		Audio audio = new Audio();
+		audioTrack.play();
 		try {
 			datagramSocket = new DatagramSocket();
 			serverAddr = InetAddress.getByName(SERVER_NAME);
@@ -69,6 +71,7 @@ public class UdpGetter extends Thread {
 			DatagramPacket inPacket = new DatagramPacket(msg, msg.length);
 			sleep(1000);
 			
+			audio.start();
 			while (thread_flag) {
 				boolean send_flag = true;
 				while(send_flag){
@@ -86,18 +89,12 @@ public class UdpGetter extends Thread {
 					}
 				}
 				datagramSocket.receive(inPacket);
-				count++;
-				if(!isSameByte(msg, comp)){
-					count2++;
-					audioTrack.write(msg, 0, msg.length);
-					for(int i=0;i<20;i++){
-						comp[i] = msg[i];
-					}
-				}
+				audio.onAudio();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
+			audio.stopAudio();
 			datagramSocket.close();
 
 			// 예외 메시지
@@ -105,6 +102,38 @@ public class UdpGetter extends Thread {
 			mess.what = 1;
 			mHandler.sendMessage(mess);
 		}
+		audio.stopAudio();
 		datagramSocket.close();
+	}
+	
+	public static void writeSound(){
+		audioTrack.write(msg, 0, msg.length);
+	}
+	
+	class Audio extends Thread{
+		private boolean audio_flag;
+		private boolean on_air;
+		Audio(){
+			audio_flag = true;
+		}
+		public void run(){
+			try {
+				sleep(1000);
+				while(audio_flag){
+					if(on_air){
+						writeSound();
+						on_air = false;
+					}
+				}
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		public void onAudio(){
+			this.on_air = true;
+		}
+		public void stopAudio(){
+			this.audio_flag = false;
+		}
 	}
 }

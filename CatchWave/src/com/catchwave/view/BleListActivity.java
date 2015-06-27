@@ -60,7 +60,13 @@ public class BleListActivity extends Activity {
 				| Paint.FAKE_BOLD_TEXT_FLAG);
 		textViewTitle.setTextScaleX(1.8f);
 		textViewTitle.setText("CATCH WAVE");
-
+		
+		// 리스트뷰 세팅
+		ble_arr = new ArrayList<BleVO>();
+		adapter = new BleListAdapter(this, ble_arr);
+		ListView list = (ListView) findViewById(R.id.ble_listView);
+		list.setAdapter(adapter);
+		
 		// BLE 지원 안되는거 종료
 		if (!getPackageManager().hasSystemFeature(
 				PackageManager.FEATURE_BLUETOOTH_LE)) {
@@ -106,11 +112,7 @@ public class BleListActivity extends Activity {
 	protected void onResume() {
 		super.onResume();
 
-		// 리스트뷰 세팅
-		ble_arr = new ArrayList<BleVO>();
-		adapter = new BleListAdapter(this, ble_arr);
-		ListView list = (ListView) findViewById(R.id.ble_listView);
-		list.setAdapter(adapter);
+
 
 //		// OnResume시에 SCANNING
 //		if (mBluetoothAdapter == null || !mBluetoothAdapter.isEnabled()) {
