@@ -7,15 +7,12 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import com.util.UdpGet.Audio;
-
 import android.media.AudioTrack;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
 public class UdpGetter extends Thread {
-	private static final int TIMEOUT = 2000;
 	public static final String SERVER_NAME = "192.168.42.1";
 	protected static final int PORT = 9000;
 	protected boolean flag = false;
@@ -24,7 +21,7 @@ public class UdpGetter extends Thread {
 	Handler mHandler;
 	
 	private static AudioTrack audioTrack;
-	private static byte[] msg = new byte[512];
+	private static byte[] msg = new byte[1024];
 
 	public UdpGetter(AudioTrack audioTrack, Handler mHandler) {
 		this.audioTrack = audioTrack;
@@ -63,40 +60,30 @@ public class UdpGetter extends Thread {
 			udp_port += (int) udp_port_byte[0];
 			udp_port += (int) udp_port_byte[1] * 256;
 			Log.d("tes", "udp_port is " + udp_port);
-			sock.close();
-
-			datagramSocket.setSoTimeout(TIMEOUT);
-			DatagramPacket outPacket = new DatagramPacket(ack, 1, serverAddr,
-					udp_port);
+			
+			DatagramPacket outPacket = new DatagramPacket(ack, 1, serverAddr,udp_port);
 			DatagramPacket inPacket = new DatagramPacket(msg, msg.length);
 			sleep(1000);
 			
+			
 			audio.start();
 			while (thread_flag) {
-				boolean send_flag = true;
-				while(send_flag){
-					try{
-						datagramSocket.send(outPacket);
-					}
-					catch(IOException e){
-						send_flag = false;
-					}
-					finally{
-						if(send_flag){
-							break;
-						}
-						send_flag = true;
-					}
-				}
+				datagramSocket.send(outPacket);
 				datagramSocket.receive(inPacket);
+				Log.d("test", "receiving data~");
 				audio.onAudio();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 			audio.stopAudio();
+			try {
+				sock.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 			datagramSocket.close();
-
 			// 예외 메시지
 			Message mess = mHandler.obtainMessage();
 			mess.what = 1;
@@ -104,6 +91,12 @@ public class UdpGetter extends Thread {
 		}
 		audio.stopAudio();
 		datagramSocket.close();
+		try {
+			sock.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public static void writeSound(){
